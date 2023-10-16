@@ -1,3 +1,8 @@
 {
-  "conventionalCommits.scopes": ["Dependencies", "Entities", "Persistence"]
+  "conventionalCommits.scopes": [
+    "Dependencies",
+    "Entities",
+    "Persistence",
+    "Configuration"
+  ]
 }
