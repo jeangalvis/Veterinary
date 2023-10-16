@@ -3,6 +3,7 @@
     "Dependencies",
     "Entities",
     "Persistence",
-    "Configuration"
+    "Configuration",
+    "Migration"
   ]
 }
