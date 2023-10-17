@@ -6,6 +6,7 @@
     "Configuration",
     "Migration",
     "Extensions",
-    "Interfaces"
+    "Interfaces",
+    "Repository"
   ]
 }
