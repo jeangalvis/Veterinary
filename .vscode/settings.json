@@ -4,6 +4,7 @@
     "Entities",
     "Persistence",
     "Configuration",
-    "Migration"
+    "Migration",
+    "Extensions"
   ]
 }
