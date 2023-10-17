@@ -9,6 +9,7 @@
     "Interfaces",
     "Repository",
     "UnitOfWork",
-    "Profiles"
+    "Profiles",
+    "Controllers"
   ]
 }
