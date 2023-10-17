@@ -5,6 +5,7 @@
     "Persistence",
     "Configuration",
     "Migration",
-    "Extensions"
+    "Extensions",
+    "Interfaces"
   ]
 }
