@@ -1,3 +1,6 @@
+using Application.UnitOfWork;
+using Domain.Interfaces;
+
 namespace API.Extensions;
 public static class ApplicationServiceExtensions
 {
@@ -9,4 +12,8 @@ public static class ApplicationServiceExtensions
                 .AllowAnyMethod()       //WithMethods("GET","POST)
                 .AllowAnyHeader());     //WithHeaders("accept","content-type")
     });
+    public static void AddApplicationServices(this IServiceCollection services)
+    {
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+    }
 }
