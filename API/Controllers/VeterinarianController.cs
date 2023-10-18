@@ -20,16 +20,16 @@ public class VeterinarianController : BaseApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<VeterinarianDto>>> Get1()
     {
-        var suppliers = await _unitOfWork.Veterinarians.GetAllAsync();
-        return _mapper.Map<List<VeterinarianDto>>(suppliers);
+        var result = await _unitOfWork.Veterinarians.GetAllAsync();
+        return _mapper.Map<List<VeterinarianDto>>(result);
     }
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<VeterinarianDto>> Get2(int id)
     {
-        var supplier = await _unitOfWork.Veterinarians.GetByIdAsync(id);
-        return _mapper.Map<VeterinarianDto>(supplier);
+        var result = await _unitOfWork.Veterinarians.GetByIdAsync(id);
+        return _mapper.Map<VeterinarianDto>(result);
     }
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -73,5 +73,13 @@ public class VeterinarianController : BaseApiController
         _unitOfWork.Veterinarians.Remove(result);
         await _unitOfWork.SaveAsync();
         return NoContent();
+    }
+    [HttpGet("GetVeterinarianxSpeaciality")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<VeterinarianDto>>> Get3()
+    {
+        var result = await _unitOfWork.Veterinarians.GetVeterinarianxSpeaciality();
+        return _mapper.Map<List<VeterinarianDto>>(result);
     }
 }

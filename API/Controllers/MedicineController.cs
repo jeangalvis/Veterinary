@@ -75,4 +75,20 @@ public class MedicineController : BaseApiController
         await _unitOfWork.SaveAsync();
         return NoContent();
     }
+    [HttpGet("GetMedicinesxSupplier")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<MedicineDto>>> Get3()
+    {
+        var medicines = await _unitOfWork.Medicines.GetMedicinesxSupplier();
+        return _mapper.Map<List<MedicineDto>>(medicines);
+    }
+    [HttpGet("GetMedicinesMoreExpensiveThan")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<MedicineDto>>> Get4()
+    {
+        var medicines = await _unitOfWork.Medicines.GetMedicinesMoreExpensiveThan();
+        return _mapper.Map<List<MedicineDto>>(medicines);
+    }
 }

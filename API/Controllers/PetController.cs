@@ -74,4 +74,20 @@ public class PetController : BaseApiController
         await _unitOfWork.SaveAsync();
         return NoContent();
     }
+    [HttpGet("GetPetsxSpecie")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<PetDto>>> Get3()
+    {
+        var pets = await _unitOfWork.Pets.GetPetsxSpecie();
+        return _mapper.Map<List<PetDto>>(pets);
+    }
+    [HttpGet("GetPetsxReason")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<PetDto>>> Get4()
+    {
+        var pets = await _unitOfWork.Pets.GetPetsxReason();
+        return _mapper.Map<List<PetDto>>(pets);
+    }
 }

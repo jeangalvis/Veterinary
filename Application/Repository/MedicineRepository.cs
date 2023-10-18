@@ -25,4 +25,18 @@ public class MedicineRepository : GenericRepository<Medicine>, IMedicine
                         .Include(p => p.Supplier)
                         .ToListAsync();
     }
+    public async Task<IEnumerable<Medicine>> GetMedicinesxSupplier()
+    {
+        return await _context.Medicines
+                    .Include(p => p.Supplier).Where(p => p.Supplier.Name.ToLower() == "Genfar".ToLower())
+                    .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Medicine>> GetMedicinesMoreExpensiveThan()
+    {
+        return await _context.Medicines
+                            .Include(p => p.Supplier)
+                            .Where(p => p.Price > 50000)
+                            .ToListAsync();
+    }
 }

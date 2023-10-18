@@ -74,4 +74,12 @@ public class OwnerController : BaseApiController
         await _unitOfWork.SaveAsync();
         return NoContent();
     }
+    [HttpGet("GetOwnersWithPets")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<OwnersWithPetsDto>>> Get3()
+    {
+        var result = await _unitOfWork.Owners.GetOwnersWithPets();
+        return _mapper.Map<List<OwnersWithPetsDto>>(result);
+    }
 }

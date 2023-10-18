@@ -18,5 +18,6 @@ public class MappingProfiles : Profile
         CreateMap<PurchasedMedicine, PurchasedMedicineDto>().ReverseMap();
         CreateMap<SoldMedicine, SoldMedicineDto>().ReverseMap();
         CreateMap<Supplier, SupplierDto>().ReverseMap();
+        CreateMap<Owner, OwnersWithPetsDto>().ReverseMap();
     }
 }

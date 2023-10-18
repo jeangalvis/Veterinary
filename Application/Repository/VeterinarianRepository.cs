@@ -23,4 +23,11 @@ public class VeterinarianRepository : GenericRepository<Veterinarian>, IVeterina
         return await _context.Veterinarians
                         .ToListAsync();
     }
+
+    public async Task<IEnumerable<Veterinarian>> GetVeterinarianxSpeaciality()
+    {
+        return await _context.Veterinarians
+                        .Where(p => p.Speciality.ToLower() == "cirujano vascular".ToLower())
+                        .ToListAsync();
+    }
 }

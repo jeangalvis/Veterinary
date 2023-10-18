@@ -27,4 +27,22 @@ public class PetRepository : GenericRepository<Pet>, IPet
                         .Include(p => p.Breed)
                         .ToListAsync();
     }
+
+    public async Task<IEnumerable<Pet>> GetPetsxSpecie()
+    {
+        return await _context.Pets
+                        .Include(p => p.Breed)
+                        .ThenInclude(p => p.Species)
+                        .Where(p => p.Breed.Species.Name.ToLower() == "Felino".ToLower())
+                        .ToListAsync();
+    }
+    public async Task<IEnumerable<Pet>> GetPetsxReason()
+    {
+        DateTime start = new DateTime(2023, 1, 1);
+        DateTime end = start.AddMonths(3).AddDays(-1);
+        return await _context.Pets
+                        .Include(p => p.Appointments)
+                        .Where(p => p.Appointments.Any(p => p.Reason.ToLower() == "Vacunacion".ToLower() && p.Date >= start && p.Date <= end))
+                        .ToListAsync();
+    }
 }

@@ -23,4 +23,10 @@ public class OwnerRepository : GenericRepository<Owner>, IOwner
         return await _context.Owners
                         .ToListAsync();
     }
+    public async Task<IEnumerable<Owner>> GetOwnersWithPets()
+    {
+        return await _context.Owners
+                        .Include(p => p.Pets)
+                        .ToListAsync();
+    }
 }
