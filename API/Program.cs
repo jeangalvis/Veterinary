@@ -1,3 +1,4 @@
+using System.Reflection;
 using API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureCors();
 builder.Services.AddApplicationServices();
+builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 
 builder.Services.AddDbContext<VeterinaryContext>(options =>
 {

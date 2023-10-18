@@ -3,7 +3,7 @@ using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
-public class UserController : ControllerBase
+public class UserController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -12,6 +12,5 @@ public class UserController : ControllerBase
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-
     }
 }
