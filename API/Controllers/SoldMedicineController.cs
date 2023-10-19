@@ -74,4 +74,12 @@ public class SoldMedicineController : BaseApiController
         await _unitOfWork.SaveAsync();
         return NoContent();
     }
+    [HttpGet("GetMovMedWithTotal")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<SoldMedicineTotalDto>>> Get3()
+    {
+        var soldMedicines = await _unitOfWork.SoldMedicines.GetMovMedWithTotal();
+        return _mapper.Map<List<SoldMedicineTotalDto>>(soldMedicines);
+    }
 }

@@ -74,4 +74,12 @@ public class SupplierController : BaseApiController
         await _unitOfWork.SaveAsync();
         return NoContent();
     }
+    [HttpGet("GetSupplierxMedicine/{name}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<SupplierDto>>> Get3(string name)
+    {
+        var suppliers = await _unitOfWork.Suppliers.GetSupplierxMedicine(name);
+        return _mapper.Map<List<SupplierDto>>(suppliers);
+    }
 }

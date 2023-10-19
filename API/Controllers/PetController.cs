@@ -90,4 +90,36 @@ public class PetController : BaseApiController
         var pets = await _unitOfWork.Pets.GetPetsxReason();
         return _mapper.Map<List<PetDto>>(pets);
     }
+    [HttpGet("GetPetsGroupBySpecie")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<SpeciesWithPetsDto>>> Get5()
+    {
+        var pets = await _unitOfWork.Pets.GetPetsGroupBySpecie();
+        return _mapper.Map<List<SpeciesWithPetsDto>>(pets);
+    }
+    [HttpGet("GetPetsxVeterinarian/{name}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<PetDto>>> Get6(string name)
+    {
+        var pets = await _unitOfWork.Pets.GetPetsxVeterinarian(name);
+        return _mapper.Map<List<PetDto>>(pets);
+    }
+    [HttpGet("GetPetsGoldenRetriever")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<PetsWithOwnerDto>>> Get7()
+    {
+        var pets = await _unitOfWork.Pets.GetPetsGoldenRetriever();
+        return _mapper.Map<List<PetsWithOwnerDto>>(pets);
+    }
+    [HttpGet("GetPetCountByBreed")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<BreedWithPetCountDto>>> Get8()
+    {
+        var pets = await _unitOfWork.Pets.GetPetCountByBreed();
+        return _mapper.Map<List<BreedWithPetCountDto>>(pets);
+    }
 }

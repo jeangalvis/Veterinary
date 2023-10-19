@@ -1,6 +1,7 @@
 using API.Dtos;
 using AutoMapper;
 using Domain.Entities;
+using Domain.View;
 
 namespace API.Profiles;
 public class MappingProfiles : Profile
@@ -19,5 +20,9 @@ public class MappingProfiles : Profile
         CreateMap<SoldMedicine, SoldMedicineDto>().ReverseMap();
         CreateMap<Supplier, SupplierDto>().ReverseMap();
         CreateMap<Owner, OwnersWithPetsDto>().ReverseMap();
+        CreateMap<SpeciesWithPets, SpeciesWithPetsDto>().ReverseMap();
+        CreateMap<SoldMedicineTotal, SoldMedicineTotalDto>().ReverseMap();
+        CreateMap<Pet, PetsWithOwnerDto>().ReverseMap();
+        CreateMap<BreedWithPetCount, BreedWithPetCountDto>().ReverseMap();
     }
 }

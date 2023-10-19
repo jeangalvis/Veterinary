@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.View;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -44,5 +45,51 @@ public class PetRepository : GenericRepository<Pet>, IPet
                         .Include(p => p.Appointments)
                         .Where(p => p.Appointments.Any(p => p.Reason.ToLower() == "Vacunacion".ToLower() && p.Date >= start && p.Date <= end))
                         .ToListAsync();
+    }
+    public async Task<IEnumerable<SpeciesWithPets>> GetPetsGroupBySpecie()
+    {
+        var groupedPets = await _context.Pets
+                                .Include(p => p.Breed)
+                                    .ThenInclude(b => b.Species)
+                                .ToListAsync();
+
+        var result = groupedPets.GroupBy(p => p.Breed.Species)
+                                .Select(group => new SpeciesWithPets
+                                {
+                                    Id = group.Key.Id,
+                                    Name = group.Key.Name,
+                                    Pets = group.ToList()
+                                });
+
+        return result;
+    }
+    public async Task<IEnumerable<Pet>> GetPetsxVeterinarian(string name)
+    {
+        return await _context.Pets
+                .Include(p => p.Appointments)
+                .ThenInclude(p => p.Veterinarian)
+                .Where(p => p.Appointments.Any(p => p.Veterinarian.Name.ToLower() == name.ToLower()))
+                .ToListAsync();
+    }
+    public async Task<IEnumerable<Pet>> GetPetsGoldenRetriever()
+    {
+        return await _context.Pets
+                .Include(p => p.Breed)
+                .Include(p => p.Owner)
+                .Where(p => p.Breed.Name.ToLower() == "Golden Retriever".ToLower())
+                .ToListAsync();
+    }
+    public async Task<IEnumerable<BreedWithPetCount>> GetPetCountByBreed()
+    {
+        var breedCounts = await _context.Pets
+                                    .GroupBy(p => p.Breed.Name)
+                                    .Select(group => new BreedWithPetCount
+                                    {
+                                        BreedName = group.Key,
+                                        PetCount = group.Count()
+                                    })
+                                    .ToListAsync();
+
+        return breedCounts;
     }
 }

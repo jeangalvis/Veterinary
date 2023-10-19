@@ -23,4 +23,11 @@ public class SupplierRepository : GenericRepository<Supplier>, ISupplier
         return await _context.Suppliers
                         .ToListAsync();
     }
+    public async Task<IEnumerable<Supplier>> GetSupplierxMedicine(string name)
+    {
+        return await _context.Suppliers
+                        .Include(p => p.Medicines)
+                        .Where(p => p.Medicines.Any(p => p.Name.ToLower() == name.ToLower()))
+                        .ToListAsync();
+    }
 }

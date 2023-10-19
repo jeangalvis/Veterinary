@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.View;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -23,6 +24,20 @@ public class SoldMedicineRepository : GenericRepository<SoldMedicine>, ISoldMedi
     {
         return await _context.SoldMedicines
                         .Include(p => p.Medicine)
+                        .ToListAsync();
+    }
+    public async Task<IEnumerable<SoldMedicineTotal>> GetMovMedWithTotal()
+    {
+        return await _context.SoldMedicines
+                        .Select(p => new SoldMedicineTotal
+                        {
+                            Id = p.Id,
+                            Amount = p.Amount,
+                            Price = p.Price,
+                            SoldDate = p.SoldDate,
+                            IdMedicinefk = p.IdMedicinefk,
+                            Total = p.Price * p.Amount
+                        })
                         .ToListAsync();
     }
 }

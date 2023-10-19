@@ -23,4 +23,5 @@ public class SpeciesRepository : GenericRepository<Species>, ISpecies
         return await _context.Species
                         .ToListAsync();
     }
+
 }
