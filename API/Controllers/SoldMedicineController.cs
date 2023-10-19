@@ -98,10 +98,21 @@ public class SoldMedicineController : BaseApiController
     [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Pager<SoldMedicineDto>>> Getpag([FromQuery] Params resultParams)
+    public async Task<ActionResult<Pager<SoldMedicineDto>>> GetPag([FromQuery] Params resultParams)
     {
         var result = await _unitOfWork.SoldMedicines.GetAllAsync(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
         var lstResultDto = _mapper.Map<List<SoldMedicineDto>>(result.registros);
         return new Pager<SoldMedicineDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
+    [HttpGet("GetMovMedWithTotal")]
+    [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<SoldMedicineTotalDto>>> GetMovMedWithTotal([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.SoldMedicines.GetMovMedWithTotal(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<SoldMedicineTotalDto>>(result.registros);
+        return new Pager<SoldMedicineTotalDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
 }

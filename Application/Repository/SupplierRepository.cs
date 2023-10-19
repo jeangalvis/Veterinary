@@ -44,4 +44,20 @@ public class SupplierRepository : GenericRepository<Supplier>, ISupplier
                                  .ToListAsync();
         return (totalRegistros, registros);
     }
+    public async Task<(int totalRegistros, IEnumerable<Supplier> registros)> GetSupplierxMedicine(int pageIndex, int pageSize, string search, string name)
+    {
+        var query = _context.Suppliers as IQueryable<Supplier>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Include(p => p.Medicines)
+                                .Where(p => p.Medicines.Any(p => p.Name.ToLower() == name.ToLower()))
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
 }

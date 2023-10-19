@@ -104,4 +104,16 @@ public class SupplierController : BaseApiController
         var lstResultDto = _mapper.Map<List<SupplierDto>>(result.registros);
         return new Pager<SupplierDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
+
+    [HttpGet("GetSupplierxMedicine")]
+    [Authorize(Roles = "Administrator")]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<SupplierDto>>> GetSupplierxMedicine([FromQuery] Params resultParams, string name)
+    {
+        var result = await _unitOfWork.Suppliers.GetSupplierxMedicine(resultParams.PageIndex, resultParams.PageSize, resultParams.Search, name);
+        var lstResultDto = _mapper.Map<List<SupplierDto>>(result.registros);
+        return new Pager<SupplierDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
 }

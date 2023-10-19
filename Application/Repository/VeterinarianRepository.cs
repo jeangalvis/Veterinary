@@ -44,4 +44,19 @@ public class VeterinarianRepository : GenericRepository<Veterinarian>, IVeterina
                                  .ToListAsync();
         return (totalRegistros, registros);
     }
+    public async Task<(int totalRegistros, IEnumerable<Veterinarian> registros)> GetVeterinarianxSpeaciality(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.Veterinarians as IQueryable<Veterinarian>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Where(p => p.Speciality.ToLower() == "cirujano vascular".ToLower())
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
 }

@@ -55,4 +55,26 @@ public class SoldMedicineRepository : GenericRepository<SoldMedicine>, ISoldMedi
                                  .ToListAsync();
         return (totalRegistros, registros);
     }
+    public async Task<(int totalRegistros, IEnumerable<SoldMedicineTotal> registros)> GetMovMedWithTotal(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.SoldMedicines.Select(p => new SoldMedicineTotal
+        {
+            Id = p.Id,
+            Amount = p.Amount,
+            Price = p.Price,
+            SoldDate = p.SoldDate,
+            IdMedicinefk = p.IdMedicinefk,
+            Total = p.Price * p.Amount
+        }).AsQueryable();
+        if (!string.IsNullOrEmpty(search))
+        {
+            //query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
 }

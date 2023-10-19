@@ -104,4 +104,15 @@ public class VeterinarianController : BaseApiController
         var lstResultDto = _mapper.Map<List<VeterinarianDto>>(result.registros);
         return new Pager<VeterinarianDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
+    [HttpGet("GetVeterinarianxSpeaciality")]
+    [Authorize(Roles = "Administrator")]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<VeterinarianDto>>> GetVeterinarianxSpeaciality([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Veterinarians.GetVeterinarianxSpeaciality(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<VeterinarianDto>>(result.registros);
+        return new Pager<VeterinarianDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
 }

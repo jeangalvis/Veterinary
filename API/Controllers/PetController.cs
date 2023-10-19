@@ -193,4 +193,26 @@ public class PetController : BaseApiController
         var lstResultDto = _mapper.Map<List<PetDto>>(result.registros);
         return new Pager<PetDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
+    [HttpGet("GetPetsGoldenRetriever")]
+    [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<PetsWithOwnerDto>>> GetPetsGoldenRetriever([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Pets.GetPetsGoldenRetriever(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<PetsWithOwnerDto>>(result.registros);
+        return new Pager<PetsWithOwnerDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
+    [HttpGet("GetPetCountByBreed")]
+    [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<BreedWithPetCountDto>>> GetPetCountByBreed([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Pets.GetPetCountByBreed(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<BreedWithPetCountDto>>(result.registros);
+        return new Pager<BreedWithPetCountDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
 }
