@@ -3,6 +3,7 @@ using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -20,6 +21,7 @@ public class MedicineController : BaseApiController
 
     }
     [HttpGet]
+    [Authorize(Roles = "Administrator, Employee")]
     [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -29,6 +31,7 @@ public class MedicineController : BaseApiController
         return _mapper.Map<List<MedicineDto>>(medicines);
     }
     [HttpGet("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<MedicineDto>> Get2(int id)
@@ -37,6 +40,7 @@ public class MedicineController : BaseApiController
         return _mapper.Map<MedicineDto>(medicine);
     }
     [HttpPost]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Medicine>> Post(MedicineDto resultDto)
@@ -52,6 +56,7 @@ public class MedicineController : BaseApiController
         return CreatedAtAction(nameof(Post), new { id = resultDto.Id }, resultDto);
     }
     [HttpPut("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Medicine>> Put(int id, [FromBody] MedicineDto resultDto)
@@ -66,6 +71,7 @@ public class MedicineController : BaseApiController
         return result;
     }
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Delete(int id)
@@ -80,6 +86,7 @@ public class MedicineController : BaseApiController
         return NoContent();
     }
     [HttpGet("GetMedicinesxSupplier")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<MedicineDto>>> Get3()
@@ -88,6 +95,7 @@ public class MedicineController : BaseApiController
         return _mapper.Map<List<MedicineDto>>(medicines);
     }
     [HttpGet("GetMedicinesMoreExpensiveThan")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<MedicineDto>>> Get4()
@@ -96,6 +104,7 @@ public class MedicineController : BaseApiController
         return _mapper.Map<List<MedicineDto>>(medicines);
     }
     [HttpGet]
+    [Authorize(Roles = "Administrator, Employee")]
     [MapToApiVersion("1.1")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

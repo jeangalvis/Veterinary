@@ -3,6 +3,7 @@ using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -19,6 +20,7 @@ public class PetController : BaseApiController
         _mapper = mapper;
     }
     [HttpGet]
+    [Authorize(Roles = "Administrator, Employee")]
     [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -28,6 +30,7 @@ public class PetController : BaseApiController
         return _mapper.Map<List<PetDto>>(pets);
     }
     [HttpGet("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PetDto>> Get2(int id)
@@ -36,6 +39,7 @@ public class PetController : BaseApiController
         return _mapper.Map<PetDto>(pet);
     }
     [HttpPost]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Pet>> Post(PetDto resultDto)
@@ -51,6 +55,7 @@ public class PetController : BaseApiController
         return CreatedAtAction(nameof(Post), new { id = resultDto.Id }, resultDto);
     }
     [HttpPut("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Pet>> Put(int id, [FromBody] PetDto resultDto)
@@ -65,6 +70,7 @@ public class PetController : BaseApiController
         return result;
     }
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Delete(int id)
@@ -79,6 +85,7 @@ public class PetController : BaseApiController
         return NoContent();
     }
     [HttpGet("GetPetsxSpecie")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<PetDto>>> Get3()
@@ -87,6 +94,7 @@ public class PetController : BaseApiController
         return _mapper.Map<List<PetDto>>(pets);
     }
     [HttpGet("GetPetsxReason")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<PetDto>>> Get4()
@@ -95,6 +103,7 @@ public class PetController : BaseApiController
         return _mapper.Map<List<PetDto>>(pets);
     }
     [HttpGet("GetPetsGroupBySpecie")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<SpeciesWithPetsDto>>> Get5()
@@ -103,6 +112,7 @@ public class PetController : BaseApiController
         return _mapper.Map<List<SpeciesWithPetsDto>>(pets);
     }
     [HttpGet("GetPetsxVeterinarian/{name}")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<PetDto>>> Get6(string name)
@@ -111,6 +121,7 @@ public class PetController : BaseApiController
         return _mapper.Map<List<PetDto>>(pets);
     }
     [HttpGet("GetPetsGoldenRetriever")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<PetsWithOwnerDto>>> Get7()
@@ -119,6 +130,7 @@ public class PetController : BaseApiController
         return _mapper.Map<List<PetsWithOwnerDto>>(pets);
     }
     [HttpGet("GetPetCountByBreed")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<BreedWithPetCountDto>>> Get8()
@@ -128,6 +140,7 @@ public class PetController : BaseApiController
     }
     [HttpGet]
     [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Pager<PetDto>>> Getpag([FromQuery] Params resultParams)

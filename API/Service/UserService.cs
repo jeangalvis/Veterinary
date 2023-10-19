@@ -144,16 +144,18 @@ public class UserService : IUserService
         DataUserDto dataUserDto = new DataUserDto();
         var user = await _unitOfWork.Users
                 .GetByUsername(model.Username);
+
         if (user == null)
         {
             dataUserDto.IsAuthenticated = false;
             dataUserDto.Message = $"User does not exist with username {model.Username}.";
+            dataUserDto.RefreshToken = "";
             return dataUserDto;
         }
         var result = _passwordHasher.VerifyHashedPassword(user, user.Password, model.Password);
-
         if (result == PasswordVerificationResult.Success)
         {
+
             dataUserDto.IsAuthenticated = true;
             JwtSecurityToken jwtSecurityToken = CreateJwtToken(user);
             dataUserDto.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -183,6 +185,7 @@ public class UserService : IUserService
         }
         dataUserDto.IsAuthenticated = false;
         dataUserDto.Message = $"Credenciales incorrectas para el usuario {user.Username}.";
+        dataUserDto.RefreshToken = "";
         return dataUserDto;
     }
     private JwtSecurityToken CreateJwtToken(User user)

@@ -6,6 +6,7 @@ using AspNetCoreRateLimit;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -27,6 +28,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthorizationHandler, GlobalVerbRoleHandler>();
     }
     public static void ConfigureRateLimiting(this IServiceCollection services)
     {

@@ -3,6 +3,7 @@ using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -20,6 +21,7 @@ public class BreedController : BaseApiController
 
     }
     [HttpGet]
+    [Authorize(Roles = "Administrator, Employee")]
     [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -29,6 +31,7 @@ public class BreedController : BaseApiController
         return _mapper.Map<List<BreedDto>>(breeds);
     }
     [HttpGet("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<BreedDto>> Get2(int id)
@@ -37,6 +40,7 @@ public class BreedController : BaseApiController
         return _mapper.Map<BreedDto>(breed);
     }
     [HttpPost]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Breed>> Post(BreedDto resultDto)
@@ -52,6 +56,7 @@ public class BreedController : BaseApiController
         return CreatedAtAction(nameof(Post), new { id = resultDto.Id }, resultDto);
     }
     [HttpPut("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Breed>> Put(int id, [FromBody] BreedDto resultDto)
@@ -66,6 +71,7 @@ public class BreedController : BaseApiController
         return result;
     }
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Delete(int id)
@@ -81,6 +87,7 @@ public class BreedController : BaseApiController
     }
     [HttpGet]
     [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator, Employee")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Pager<BreedDto>>> Getpag([FromQuery] Params resultParams)

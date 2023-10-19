@@ -1,6 +1,8 @@
 using System.Reflection;
 using API.Extensions;
+using API.Helpers;
 using AspNetCoreRateLimit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Persistence;
@@ -8,12 +10,19 @@ using Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplicationServices();
 builder.Services.AddJwt(builder.Configuration);
+builder.Services.AddAuthorization(opts =>
+{
+    opts.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .AddRequirements(new GlobalVerbRoleRequirement())
+        .Build();
+});
 builder.Services.ConfigureRateLimiting();
 builder.Services.ConfigureApiVersioning();
 builder.Services.AddSwaggerGen(c =>
