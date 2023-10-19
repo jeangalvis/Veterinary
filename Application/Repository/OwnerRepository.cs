@@ -43,4 +43,19 @@ public class OwnerRepository : GenericRepository<Owner>, IOwner
                                  .ToListAsync();
         return (totalRegistros, registros);
     }
+    public async Task<(int totalRegistros, IEnumerable<Owner> registros)> GetOwnersWithPets(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.Owners as IQueryable<Owner>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Include(p => p.Pets)
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
 }

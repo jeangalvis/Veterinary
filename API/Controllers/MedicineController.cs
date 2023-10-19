@@ -114,4 +114,27 @@ public class MedicineController : BaseApiController
         var lstResultDto = _mapper.Map<List<MedicineDto>>(result.registros);
         return new Pager<MedicineDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
+
+    [HttpGet("GetMedicinesxSupplier")]
+    [Authorize(Roles = "Administrator")]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<MedicineDto>>> GetMedicinesxSupplier([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Medicines.GetMedicinesxSupplier(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<MedicineDto>>(result.registros);
+        return new Pager<MedicineDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
+    [HttpGet("GetMedicinesMoreExpensiveThan")]
+    [Authorize(Roles = "Administrator")]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<MedicineDto>>> GetMedicinesMoreExpensiveThan([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Medicines.GetMedicinesMoreExpensiveThan(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<MedicineDto>>(result.registros);
+        return new Pager<MedicineDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
 }

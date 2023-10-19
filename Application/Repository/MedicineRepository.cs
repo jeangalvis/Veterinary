@@ -54,4 +54,35 @@ public class MedicineRepository : GenericRepository<Medicine>, IMedicine
                                  .ToListAsync();
         return (totalRegistros, registros);
     }
+    public async Task<(int totalRegistros, IEnumerable<Medicine> registros)> GetMedicinesxSupplier(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.Medicines as IQueryable<Medicine>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Include(p => p.Supplier).Where(p => p.Supplier.Name.ToLower() == "Genfar".ToLower())
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
+    public async Task<(int totalRegistros, IEnumerable<Medicine> registros)> GetMedicinesMoreExpensiveThan(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.Medicines as IQueryable<Medicine>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Include(p => p.Supplier)
+                                .Where(p => p.Price > 50000)
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
 }

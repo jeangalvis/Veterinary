@@ -149,4 +149,48 @@ public class PetController : BaseApiController
         var lstResultDto = _mapper.Map<List<PetDto>>(result.registros);
         return new Pager<PetDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
+    [HttpGet("GetPetsxSpecie")]
+    [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<PetDto>>> GetPetsxSpecie([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Pets.GetPetsxSpecie(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<PetDto>>(result.registros);
+        return new Pager<PetDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
+    [HttpGet("GetPetsxReason")]
+    [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<PetDto>>> GetPetsxReason([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Pets.GetPetsxReason(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<PetDto>>(result.registros);
+        return new Pager<PetDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
+    [HttpGet("GetPetsGroupBySpecie")]
+    [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<SpeciesWithPetsDto>>> GetPetsGroupBySpecie([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Pets.GetPetsGroupBySpecie(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<SpeciesWithPetsDto>>(result.registros);
+        return new Pager<SpeciesWithPetsDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
+    [HttpGet("GetPetsxVeterinarian")]
+    [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<PetDto>>> GetPetsxVeterinarian([FromQuery] Params resultParams, string name)
+    {
+        var result = await _unitOfWork.Pets.GetPetsxVeterinarian(resultParams.PageIndex, resultParams.PageSize, resultParams.Search, name);
+        var lstResultDto = _mapper.Map<List<PetDto>>(result.registros);
+        return new Pager<PetDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
 }

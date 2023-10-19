@@ -104,4 +104,15 @@ public class OwnerController : BaseApiController
         var lstResultDto = _mapper.Map<List<OwnerDto>>(result.registros);
         return new Pager<OwnerDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
+    [HttpGet("GetOwnersWithPets")]
+    [MapToApiVersion("1.1")]
+    [Authorize(Roles = "Administrator")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<OwnersWithPetsDto>>> GetOwnersWithPets([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Owners.GetOwnersWithPets(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<OwnersWithPetsDto>>(result.registros);
+        return new Pager<OwnersWithPetsDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+    }
 }

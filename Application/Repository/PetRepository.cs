@@ -108,4 +108,80 @@ public class PetRepository : GenericRepository<Pet>, IPet
                                  .ToListAsync();
         return (totalRegistros, registros);
     }
+    public async Task<(int totalRegistros, IEnumerable<Pet> registros)> GetPetsxSpecie(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.Pets as IQueryable<Pet>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Include(p => p.Breed)
+                                .ThenInclude(p => p.Species)
+                                .Where(p => p.Breed.Species.Name.ToLower() == "Felino".ToLower())
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
+    public async Task<(int totalRegistros, IEnumerable<Pet> registros)> GetPetsxReason(int pageIndex, int pageSize, string search)
+    {
+        DateTime start = new DateTime(2023, 1, 1);
+        DateTime end = start.AddMonths(3).AddDays(-1);
+        var query = _context.Pets as IQueryable<Pet>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Include(p => p.Appointments)
+                                .Where(p => p.Appointments.Any(p => p.Reason.ToLower() == "Vacunacion".ToLower() && p.Date >= start && p.Date <= end))
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
+    public async Task<(int totalRegistros, IEnumerable<SpeciesWithPets> registros)> GetPetsGroupBySpecie(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.Pets
+                .Include(p => p.Breed)
+                    .ThenInclude(b => b.Species)
+                .GroupBy(p => p.Breed.Species)
+                .Select(group => new SpeciesWithPets
+                {
+                    Id = group.Key.Id,
+                    Name = group.Key.Name,
+                    Pets = group.ToList()
+                })
+                .AsQueryable();
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
+    public async Task<(int totalRegistros, IEnumerable<Pet> registros)> GetPetsxVeterinarian(int pageIndex, int pageSize, string search, string name)
+    {
+        var query = _context.Pets as IQueryable<Pet>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Name.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Include(p => p.Appointments)
+                                .ThenInclude(p => p.Veterinarian)
+                                .Where(p => p.Appointments.Any(p => p.Veterinarian.Name.ToLower() == name.ToLower()))
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
 }

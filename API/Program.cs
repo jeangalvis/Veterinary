@@ -29,6 +29,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); // Use First() as a workaround
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Veterinary", Version = "v1" });
+    c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "Veterinary v1.1", Version = "v1.1" });
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
@@ -69,7 +70,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Veterinary v1");
+    c.SwaggerEndpoint("/swagger/v1.1/swagger.json", "Veterinary v1.1");
+});
 }
 app.UseCors("CorsPolicy");
 
