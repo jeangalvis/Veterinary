@@ -1,10 +1,13 @@
 using API.Dtos;
+using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 public class PetController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -16,6 +19,7 @@ public class PetController : BaseApiController
         _mapper = mapper;
     }
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<PetDto>>> Get1()
@@ -121,5 +125,15 @@ public class PetController : BaseApiController
     {
         var pets = await _unitOfWork.Pets.GetPetCountByBreed();
         return _mapper.Map<List<BreedWithPetCountDto>>(pets);
+    }
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<PetDto>>> Getpag([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Pets.GetAllAsync(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<PetDto>>(result.registros);
+        return new Pager<PetDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
 }

@@ -11,16 +11,19 @@ public class UserRepository : GenericRepository<User>, IUser
     {
         _context = context;
     }
-    public override async Task<User> GetByIdAsync(int id)
+    public async Task<User> GetByRefreshToken(string refreshToken)
     {
         return await _context.Users
-                        .FirstOrDefaultAsync(p => p.Id == id);
-
+                .Include(u => u.Rols)
+                .Include(u => u.RefreshTokens)
+                .FirstOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
     }
 
-    public override async Task<IEnumerable<User>> GetAllAsync()
+    public async Task<User> GetByUsername(string username)
     {
         return await _context.Users
-                        .ToListAsync();
+                    .Include(u => u.Rols)
+                    .Include(u => u.RefreshTokens)
+                    .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
     }
 }

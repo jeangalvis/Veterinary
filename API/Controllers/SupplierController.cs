@@ -1,10 +1,13 @@
 using API.Dtos;
+using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 public class SupplierController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -16,6 +19,7 @@ public class SupplierController : BaseApiController
         _mapper = mapper;
     }
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<SupplierDto>>> Get1()
@@ -81,5 +85,15 @@ public class SupplierController : BaseApiController
     {
         var suppliers = await _unitOfWork.Suppliers.GetSupplierxMedicine(name);
         return _mapper.Map<List<SupplierDto>>(suppliers);
+    }
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<SupplierDto>>> Getpag([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Suppliers.GetAllAsync(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<SupplierDto>>(result.registros);
+        return new Pager<SupplierDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
 }

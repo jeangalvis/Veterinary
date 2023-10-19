@@ -1,10 +1,13 @@
 using API.Dtos;
+using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 public class PurchasedMedicineController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -16,6 +19,7 @@ public class PurchasedMedicineController : BaseApiController
         _mapper = mapper;
     }
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<PurchasedMedicineDto>>> Get1()
@@ -73,5 +77,15 @@ public class PurchasedMedicineController : BaseApiController
         _unitOfWork.PurchasedMedicine.Remove(result);
         await _unitOfWork.SaveAsync();
         return NoContent();
+    }
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<PurchasedMedicineDto>>> Getpag([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.PurchasedMedicine.GetAllAsync(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<PurchasedMedicineDto>>(result.registros);
+        return new Pager<PurchasedMedicineDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
 }

@@ -1,10 +1,13 @@
 using API.Dtos;
+using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 public class MedicineController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -17,6 +20,7 @@ public class MedicineController : BaseApiController
 
     }
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<MedicineDto>>> Get1()
@@ -90,5 +94,15 @@ public class MedicineController : BaseApiController
     {
         var medicines = await _unitOfWork.Medicines.GetMedicinesMoreExpensiveThan();
         return _mapper.Map<List<MedicineDto>>(medicines);
+    }
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<MedicineDto>>> Getpag([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Medicines.GetAllAsync(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<MedicineDto>>(result.registros);
+        return new Pager<MedicineDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
 }

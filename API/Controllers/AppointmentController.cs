@@ -1,11 +1,13 @@
 using API.Dtos;
+using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
-
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 public class AppointmentController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -19,6 +21,7 @@ public class AppointmentController : BaseApiController
     }
 
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<AppointmentDto>>> Get1()
@@ -78,5 +81,15 @@ public class AppointmentController : BaseApiController
         _unitOfWork.Appointments.Remove(result);
         await _unitOfWork.SaveAsync();
         return NoContent();
+    }
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<AppointmentDto>>> Getpag([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.Appointments.GetAllAsync(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<AppointmentDto>>(result.registros);
+        return new Pager<AppointmentDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
 }

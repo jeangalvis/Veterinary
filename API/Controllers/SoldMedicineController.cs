@@ -1,10 +1,13 @@
 using API.Dtos;
+using API.Helpers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 public class SoldMedicineController : BaseApiController
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -16,6 +19,7 @@ public class SoldMedicineController : BaseApiController
         _mapper = mapper;
     }
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<SoldMedicineDto>>> Get1()
@@ -81,5 +85,15 @@ public class SoldMedicineController : BaseApiController
     {
         var soldMedicines = await _unitOfWork.SoldMedicines.GetMovMedWithTotal();
         return _mapper.Map<List<SoldMedicineTotalDto>>(soldMedicines);
+    }
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<SoldMedicineDto>>> Getpag([FromQuery] Params resultParams)
+    {
+        var result = await _unitOfWork.SoldMedicines.GetAllAsync(resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
+        var lstResultDto = _mapper.Map<List<SoldMedicineDto>>(result.registros);
+        return new Pager<SoldMedicineDto>(lstResultDto, result.totalRegistros, resultParams.PageIndex, resultParams.PageSize, resultParams.Search);
     }
 }

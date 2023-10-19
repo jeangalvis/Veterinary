@@ -27,4 +27,20 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                         .Include(p => p.Veterinarian)
                         .ToListAsync();
     }
+    public override async Task<(int totalRegistros, IEnumerable<Appointment> registros)> GetAllAsync(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.Appointments as IQueryable<Appointment>;
+        if (!string.IsNullOrEmpty(search))
+        {
+            //query = query.Where(p => p.Reason.ToLower().Contains(search));
+        }
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+                                .Include(p => p.Pet)
+                                .Include(p => p.Veterinarian)
+                                 .Skip((pageIndex - 1) * pageSize)
+                                 .Take(pageSize)
+                                 .ToListAsync();
+        return (totalRegistros, registros);
+    }
 }
